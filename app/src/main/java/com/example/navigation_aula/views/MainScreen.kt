@@ -1,10 +1,8 @@
 package com.example.navigation_aula.views
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.material.SnackbarDefaults.backgroundColor
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,8 +22,8 @@ fun MainScreen(
     tasksViewModel: TasksViewModel = viewModel()
 ) {
     val navController = rememberNavController()
-    var toggle: Boolean = false
     val uiState by tasksViewModel.mainScreenUiState.collectAsState()
+    var toggle: Boolean = false
 
     Scaffold(
         floatingActionButton = {
@@ -34,13 +32,8 @@ fun MainScreen(
                 .padding(start = 30.dp), horizontalArrangement = Arrangement.SpaceBetween) {
 
                 FloatingActionButton( onClick = {
-                    if(!toggle){
-                        tasksViewModel.showFavorite()
-                        toggle = true
-                    }else {
-                        tasksViewModel.showList()
-                        toggle = false
-                    }
+                    tasksViewModel.showFav()
+                    toggle = !toggle
                 }
                 ) {
                     Icon(painter = painterResource(id = uiState.favIcon), contentDescription = null)
@@ -55,21 +48,20 @@ fun MainScreen(
         },
 
         topBar = {
-            TopAppBar(backgroundColor = Color.Magenta) {
+            TopAppBar(backgroundColor = Color.Gray) {
                 Text(text = uiState.screenName,
-                color = Color.White)
+                color = Color.DarkGray)
             }
         }
 
-
     )
     {
-        NavHost(navController = navController, startDestination = "task_list"){
-            composable("task_list"){
-                TaskScreen(navController = navController, tasksViewModel = tasksViewModel)
+        NavHost(navController = navController, startDestination = "game_list"){
+            composable("game_list"){
+                GameScreen(navController = navController, tasksViewModel = tasksViewModel)
             }
-            composable("insert_edit_task"){
-                InsertEditTaskScreen(navController = navController, tasksViewModel = tasksViewModel )
+            composable("insert_edit_game"){
+                InsertEditGameScreen(navController = navController, tasksViewModel = tasksViewModel )
             }
         }
     }

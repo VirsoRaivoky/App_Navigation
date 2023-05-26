@@ -4,7 +4,8 @@ import androidx.annotation.DrawableRes
 import com.example.navigation_aula.R
 
 data class MainScreenUiState(
-    val screenName: String = "Task List",
+    val screenName: String = "Game List",
     @DrawableRes val fabIcon: Int = R.drawable.add,
     @DrawableRes val favIcon: Int = R.drawable.favorite
+
 )

@@ -3,7 +3,6 @@ package com.example.navigation_aula.views
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -13,54 +12,53 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.navigation_aula.models.Task
+import com.example.navigation_aula.models.Game
 import com.example.navigation_aula.viewmodels.TasksViewModel
 
 @Composable
-fun TaskScreen(
+fun GameScreen(
     navController: NavController,
     tasksViewModel: TasksViewModel
 ) {
 
     val uiState by tasksViewModel.taskScreenUiState.collectAsState()
 
-    taskList(
-        tasks = uiState.allTasks,
-        onCompletedChange = { task, isCompleted -> tasksViewModel.onTaskIsFavoriteChange(task, isCompleted)},
-        onEditTask = {tasksViewModel.editTask(it, navController)},
-        RemoveGame = {tasksViewModel.RemoveGame(it)}
-    )
+    gameList(
+        games = if(uiState.unFiltered) uiState.allGames else uiState.favGames,
+        onFavoriteChange = { game, isCompleted -> tasksViewModel.onGameIsFavoriteChange(game, isCompleted)},
+        onEditGame = {tasksViewModel.editGame(it, navController)}
+    ) { tasksViewModel.RemoveGame(it) }
 }
 
 @Composable
-fun taskList(
-    tasks: List<Task>,
-    onCompletedChange: (Task, Boolean) -> Unit,
-    onEditTask: (Task) -> Unit,
-    RemoveGame: (Task) -> Unit
+fun gameList(
+    games: List<Game>,
+    onFavoriteChange: (Game, Boolean) -> Unit,
+    onEditGame: (Game) -> Unit,
+    RemoveGame: (Game) -> Unit
 ) {
     LazyColumn(){
-        items(tasks){ task ->
-            TaskEntry(task = task, onCompletedChange = {onCompletedChange(task, it)}, onEditTask = {onEditTask(task)}, RemoveGame = {RemoveGame(task)})
+        items(games){ game ->
+            GameEntry(game = game, onFavoriteChange = { onFavoriteChange(game, it)}, onEditGame = {onEditGame(it)},RemoveGame = {RemoveGame(game)
+            })
         }
     }
 }
 
 @Composable
-fun TaskEntry(
-    task: Task,
-    onCompletedChange: (Boolean) -> Unit,
-    onEditTask: () -> Unit,
+fun GameEntry(
+    game: Game,
+    onFavoriteChange: (Boolean) -> Unit,
+    onEditGame: () -> Unit,
     RemoveGame: () -> Unit
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(4.dp)
-            .clickable { onEditTask() }, elevation  = 4.dp,
-        backgroundColor = Color.Blue,
+            .clickable { onEditGame() }, elevation  = 4.dp,
+        backgroundColor = Color.LightGray,
     ) {
         Row(
             modifier = Modifier
@@ -69,11 +67,11 @@ fun TaskEntry(
                 verticalAlignment = Alignment.CenterVertically,
         ){
             Row() {
-                if(task.isFavorite){
+                if(game.isFavorite){
                     Icon(painter = painterResource(id = com.example.navigation_aula.R.drawable.favorite), contentDescription = "high priority")
                 }
-                Text(text = task.name,
-                color = Color.White)
+                Text(text = game.name,
+                color = Color.Black)
 
             }
             Row(horizontalArrangement = Arrangement.Center) {
@@ -86,7 +84,7 @@ fun TaskEntry(
                         contentDescription = "remove Button"
                     )
                 }
-                Checkbox(checked = task.isFavorite, onCheckedChange = onCompletedChange)
+                Checkbox(checked = game.isFavorite, onCheckedChange = onFavoriteChange)
             }
         }
     }

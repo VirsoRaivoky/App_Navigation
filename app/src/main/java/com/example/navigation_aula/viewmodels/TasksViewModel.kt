@@ -63,12 +63,6 @@ class TasksViewModel: ViewModel() {
             currentState.copy(allTasks = allTasksTemp.toList())
         }
     }
-    fun showList() {
-        val gameList = _taskScreenUiState.value.allTasks
-        _taskScreenUiState.update { currentState ->
-            currentState.copy(allTasks = gameList)
-        }
-    }
 
     fun RemoveGame( RemovedGame: Task) {
         val gameList = _taskScreenUiState.value.allTasks.toMutableList()
@@ -90,10 +84,10 @@ class TasksViewModel: ViewModel() {
             task.isFavorite
         }
         _taskScreenUiState.update { currentState ->
-            currentState.copy(allTasks = gamesFav)
+            currentState.copy(isFiltered = true, allTasks = gamesFav)
         }
-
     }
+
     fun navigate(navController: NavController) {
         if (_mainScreenUiState.value.screenName == "Task List") {
             if (editTask) {

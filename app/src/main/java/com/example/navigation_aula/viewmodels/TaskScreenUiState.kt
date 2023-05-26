@@ -6,7 +6,9 @@ data class TaskScreenUiState(
     val allTasks: List<Task> = listOf(
         Task("Ultrakill","Jogo Bom", isFavorite = false),
         Task("Rust","Superestimado", isFavorite = false),
-        Task("Unturned","mal Otimizado", isFavorite = false, ),
-    )
+        Task("Unturned","mal Otimizado", isFavorite = false),
+    ),
+    val favTasks: List<Task> = listOf(),
+    var unFiltered: Boolean = true
 )
 

@@ -14,7 +14,7 @@ import androidx.navigation.NavController
 import com.example.navigation_aula.viewmodels.TasksViewModel
 
 @Composable
-fun InsertEditTaskScreen(
+fun InsertEditGameScreen(
     navController: NavController,
     tasksViewModel: TasksViewModel
 ) {
@@ -23,20 +23,20 @@ fun InsertEditTaskScreen(
         tasksViewModel.onBackPressed(navController)
     }
     InsertEditForm(
-        name = uiState.taskName,
+        name = uiState.GameName,
         review = uiState.gameReview,
-        favorite = uiState.isFavorite,
+        important = uiState.isFavorite,
         onReviewChange = {tasksViewModel.onGameReviewChange(it)},
         onNameChange = {tasksViewModel.onTaskNameChange(it)},
-    ) { tasksViewModel.onTaskImportantChange(it) }
-
+        onFavoriteChange = { tasksViewModel.onGameFavoriteChange(it) }
+    )
 }
 
 @Composable
 fun InsertEditForm(
     name: String,
     review: String,
-    favorite: Boolean,
+    important: Boolean,
     onNameChange: (String) -> Unit,
     onReviewChange: (String) -> Unit,
     onFavoriteChange: (Boolean) -> Unit,
@@ -57,7 +57,7 @@ fun InsertEditForm(
                 value = review, onValueChange = onReviewChange
             )
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Checkbox(checked = favorite, onCheckedChange = onFavoriteChange)
+                Checkbox(checked = important, onCheckedChange = onFavoriteChange)
                 Text(text = "Favorite Game")
 
             }
